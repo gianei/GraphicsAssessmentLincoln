@@ -72,10 +72,51 @@ void Game::cleanUp()
 	std::cout << "Cleaning up OK!\n";
 }
 
+void Game::keyDown(SDL_KeyboardEvent* e)
+{
+	switch (e->keysym.sym)
+	{
+	case SDLK_a: /* ’A’ key */
+		
+		if (e->keysym.mod & KMOD_SHIFT) camera.lookLeft();
+		/*{ // one of the shift keys was pressed 
+			//if (e->keysym.mod & KMOD_LSHIFT) printf("lshift\n");
+			//if (e->keysym.mod & KMOD_RSHIFT) printf("rshift\n");
+		}*/
+		else camera.moveLeft();
+		break;
+	case SDLK_d:
+		if (e->keysym.mod & KMOD_SHIFT) camera.lookRight();
+		else camera.moveRight();
+		break;
+	case SDLK_w:
+		if (e->keysym.mod & KMOD_SHIFT) camera.lookUp();
+		else camera.moveUp();
+		break;
+	case SDLK_s:
+		if (e->keysym.mod & KMOD_SHIFT) camera.lookDown();
+		else camera.moveDown();
+		break;
+	case SDLK_LSHIFT: break;
+	case SDLK_F1: break;
+	}
+}
+
 void Game::startMainLoop(){
 	initialize();
 
-	while (true){
+	SDL_Event e;
+	while (1)
+	{
+		while (SDL_PollEvent(&e))
+		{
+			switch (e.type)
+			{
+			case SDL_QUIT: exit(EXIT_SUCCESS);
+			case SDL_KEYDOWN: keyDown(&e.key); break;
+			}
+
+		}
 
 		//GET INPUT HERE - PLACEHOLDER
 
@@ -98,7 +139,7 @@ Game::Game(){
 	createContext();
 	initGlew();
 
-	
+
 }
 
 

@@ -44,7 +44,6 @@ bool ShaderProgram::CreateShader(const char *fileName, GLenum shaderType){
 bool ShaderProgram::CreateShader(GLenum shaderType, const char *sourceCode){
 	GLint statusCode = -1;
 	GLint infoLogLength;
-	char *info = "";
 
 	int shaderID = glCreateShader(shaderType);
 	glShaderSource(shaderID, 1, &sourceCode, NULL);
@@ -52,15 +51,19 @@ bool ShaderProgram::CreateShader(GLenum shaderType, const char *sourceCode){
 
 	glGetShaderiv(shaderID, GL_COMPILE_STATUS, &statusCode);
 	glGetShaderiv(shaderID, GL_INFO_LOG_LENGTH, &infoLogLength);
-	glGetShaderInfoLog(shaderID, infoLogLength, NULL, info);
+	
 
 
 	if (statusCode != 1)
 	{
+		GLchar *strInfoLog = new GLchar[infoLogLength + 1];
+		glGetShaderInfoLog(shaderID, infoLogLength, NULL, strInfoLog);
+
 		glDeleteShader(shaderID);
-		cout << "Error creating shader (status code: " << statusCode << ")\n" << info;
+		cout << "Error creating shader (status code: " << statusCode << ")\n" << strInfoLog;
 		return false;
 	}
+
 
 
 	if (shaderType == GL_VERTEX_SHADER)
