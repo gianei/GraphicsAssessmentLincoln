@@ -79,6 +79,10 @@ void GameObject::rebuffer(){
 	needRebuffer = false;
 }
 
+void GameObject::update(){
+	position += velocity;
+}
+
 void GameObject::draw(){
 	if (needRebuffer)
 		rebuffer();

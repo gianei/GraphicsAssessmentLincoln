@@ -1,6 +1,7 @@
 #include <GL/glew.h>
 #include <SDL.h>
-#include "GCamera.h";
+#include "GCamera.h"
+#include "GameObject.h"
 
 class Game {
 protected:
@@ -9,7 +10,7 @@ private:
 	SDL_Window *win; //pointer to the SDL_Window
 	SDL_GLContext context; //the SDL_GLContext
 
-	
+	vector<GameObject*>* gameObjects = new vector<GameObject*>;
 
 	void initializeSDL();
 	void createWindow();
@@ -17,6 +18,7 @@ private:
 	void createContext();
 	void initGlew();
 	void cleanUp();
+
 	void Game::keyDown(SDL_KeyboardEvent* e);
 
 	
@@ -27,6 +29,8 @@ public:
 
 	void virtual render() = 0;
 	void virtual initialize() = 0;
+
+	void addGameObject(GameObject* gameObject);
 	
 
 };

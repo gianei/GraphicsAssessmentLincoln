@@ -124,12 +124,22 @@ void Game::startMainLoop(){
 
 		render(); //RENDER HERE - PLACEHOLDER
 
+		for(GameObject* gameObject : *gameObjects)
+		{
+			gameObject->update();
+			gameObject->draw();
+		}
+
 		SDL_GL_SwapWindow(win);; //present the frame buffer to the display (swapBuffers)
 
 	}
 
 	cleanUp();
 	SDL_Quit();
+}
+
+void Game::addGameObject(GameObject* gameObject){
+	gameObjects->push_back(gameObject);
 }
 
 Game::Game(){

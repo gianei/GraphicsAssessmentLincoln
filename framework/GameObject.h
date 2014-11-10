@@ -32,6 +32,7 @@ private:
 	float angleZ = 0.0f;
 	mat4 rotationMatrix(){ return rotate(angleX, vec3(1, 0, 0)) * rotate(angleY, vec3(0, 1, 0)) * rotate(angleZ, vec3(0, 0, 1)); }
 
+	vec3 velocity;
 public:
 	//GameObject();
 	GameObject(ShaderProgram* shaderProgram, int vertexNumber, int indexNumber);
@@ -41,6 +42,7 @@ public:
 	void setPositionVertex(int index, glm::vec4 position);
 	void setIndexVertex(int index, GLshort data);
 	void setColorVertex(int index, glm::vec4 position);
+	void update();
 	void draw();
 
 	void setPosition(vec3 position);

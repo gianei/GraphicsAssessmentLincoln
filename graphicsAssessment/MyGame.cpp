@@ -70,32 +70,8 @@ void initializeVertexBuffer()
 void MyGame::render(){
 	glClear(GL_COLOR_BUFFER_BIT);
 
-
-	/*glBindBuffer(GL_ARRAY_BUFFER, positionBufferObject); //bind positionBufferObject
-
-	glEnableVertexAttribArray(0); //this 0 corresponds to the location = 0 in the GLSL for the vertex shader.
-	glEnableVertexAttribArray(1);
-	//more generically, use glGetAttribLocation() after GLSL linking to obtain the assigned attribute location.
-
-	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, 0); //define **how** values are reader from positionBufferObject in Attrib 0
-	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 0, (void*)(sizeof(float) * 4 * 3));
-
 	camera.writeOnShader(*shaderProgram);
-	shaderProgram->SetVariable(MODEL_SHADER_VARIABLE_NAME, glm::mat4());
-	shaderProgram->Activate();
 
-	glDrawArrays(GL_TRIANGLES, 0, 3); //Draw something, using Triangles, and 3 vertices - i.e. one lonely triangle
-	*/
-	camera.writeOnShader(*shaderProgram);
-	shaderProgram->SetVariable(MODEL_SHADER_VARIABLE_NAME, glm::mat4());
-	shaderProgram->Activate();
-	triangle->draw();
-	shaderProgram->SetVariable(MODEL_SHADER_VARIABLE_NAME, ModelMatrix());
-	shaderProgram->Activate();
-	triangle2->draw();
-	cube->draw();
-	glDisableVertexAttribArray(0); //cleanup
-	glUseProgram(0); //clean up
 }
 
 
@@ -203,6 +179,9 @@ void MyGame::initialize()
 
 	cube->setScale(0.2f);
 	
+	this->addGameObject(triangle);
+	this->addGameObject(triangle2);
+	this->addGameObject(cube);
 
 	glGenVertexArrays(1, &vao); //create a Vertex Array Object
 	glBindVertexArray(vao); //make the VAO active
