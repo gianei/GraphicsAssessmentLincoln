@@ -1,51 +1,18 @@
 #include "GameObject.h"
 
 
-
-
-
-GameObject::GameObject(ShaderProgram* shaderProgram, int vertexNumber, int indexNumber)
+GameObject::GameObject(ShaderProgram* shaderProgram)
 {
-	vertexNumbers = vertexNumber;
-	vertexPositions.resize(vertexNumbers * 4 * 2);// = new float[vertexNumbers * 4 * 2];
-	indexNumbers = indexNumber;
-	indexData.resize(indexNumbers);// = new GLshort[indexNumbers];
 	this->shaderProgram = shaderProgram;
-	//start indexes>
-	for (int i = 0; i < indexNumbers; i++)
-		indexData[i] = i;
-
-	
-
-	rebuffer();
 }
-
-
-
 
 GameObject::~GameObject()
 {
 }
 
 void GameObject::rebuffer(){
-	
 	//TODO use glBufferSubData
 
-
-	/*vector<float> positions = {
-		0.0f, 0.5f, 0.0f, 1.0f,
-		-0.4330127f, -0.25f, 0.0f, 1.0f,
-		0.4330127f, -0.25f, 0.0f, 1.0f,
-		0.0f, 1.0f, 0.0f, 1.0f,
-		0.0f, 0.0f, 1.0f, 1.0f,
-		1.0f, 0.0f, 0.0f, 1.0f };
-	float pos[24] = {
-		0.0f, 0.5f, 0.0f, 1.0f,
-		-0.4330127f, -0.25f, 0.0f, 1.0f,
-		0.4330127f, -0.25f, 0.0f, 1.0f,
-		0.0f, 1.0f, 0.0f, 1.0f,
-		0.0f, 0.0f, 1.0f, 1.0f,
-		1.0f, 0.0f, 0.0f, 1.0f };*/
 	glGenBuffers(1, &indexBufferObject);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferObject);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexData.size() * (sizeof(float)), &indexData[0], GL_STATIC_DRAW);
@@ -53,25 +20,19 @@ void GameObject::rebuffer(){
 
 	glGenBuffers(1, &vertexBufferObject);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObject);
-	//glBufferData(GL_ARRAY_BUFFER, sizeof(vertexPositions), &vertexPositions, GL_STATIC_DRAW);
-	glBufferData(GL_ARRAY_BUFFER, vertexPositions.size() * (sizeof(float)), &vertexPositions[0], GL_STATIC_DRAW);
-	//24 * (sizeof(float))
+	glBufferData(GL_ARRAY_BUFFER, vertexData.size() * (sizeof(float)), &vertexData[0], GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-	
 
 	glGenVertexArrays(1, &vaoObject1);
 	glBindVertexArray(vaoObject1);
 
-	int numberOfVertices = 1 * 3;
-
-	size_t colorDataOffset = sizeof(float) * 4 * numberOfVertices;
-
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObject);
-	glEnableVertexAttribArray(0);
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, 0);
-	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 0, (void*)colorDataOffset);
+	for (int i = 0; i < attributesData.size(); i++)
+	{
+		int skip = getAttributeSkip(i);
+		glEnableVertexAttribArray(i);
+		glVertexAttribPointer(i, attributesData[i], GL_FLOAT, GL_FALSE, 0, (void*)(sizeof(float) * getAttributeSkip(i)));
+	}
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferObject);
 
 	glBindVertexArray(0);
@@ -92,31 +53,76 @@ void GameObject::draw(){
 
 	glBindVertexArray(vaoObject1);
 	//ARRAY_COUNT(indexData)
-	glDrawElements(GL_TRIANGLES, indexNumbers, GL_UNSIGNED_SHORT, 0);
+	glDrawElements(GL_TRIANGLES, indexData.size(), GL_UNSIGNED_SHORT, 0);
 	glBindVertexArray(0);
 }
 
-void GameObject::setVertexNumbers(int numbers){ vertexNumbers = numbers; }
+void GameObject::setVertexCount(int count){
+	if (isVertexCountSet)
+		throw std::runtime_error("vertexCount cannot be set twice");
+	vertexCount = count;
+	isVertexCountSet = true;
+}
 
-void GameObject::setPositionVertex(int index, glm::vec4 position){
+int GameObject::getAttributeSkip(int attributeType){
 	needRebuffer = true;
-	vertexPositions[index * 4] = position.x;
-	vertexPositions[index * 4 + 1] = position.y;
-	vertexPositions[index * 4 + 2] = position.z;
-	vertexPositions[index * 4 + 3] = position.w;
+	if (attributesData.size() - 1 < attributeType)
+		throw std::runtime_error("AttributeIndex not activated");
 
-}
-void GameObject::setColorVertex(int index, glm::vec4 position){
-	needRebuffer = true;
-	vertexPositions[4 * vertexNumbers + index * 4] = position.x;
-	vertexPositions[4 * vertexNumbers + index * 4 + 1] = position.y;
-	vertexPositions[4 * vertexNumbers + index * 4 + 2] = position.z;
-	vertexPositions[4 * vertexNumbers + index * 4 + 3] = position.w;
+	int skip = 0;
+	for (int i = 0; i < attributeType; i++){
+		skip += attributesData[i] * vertexCount;
+	}
+
+	return skip;
 }
 
-void GameObject::setIndexVertex(int index, GLshort data){
-	indexData[index] = data;
+void GameObject::setAttribute(int attributeType, int index, vec3 data){
+	if (index >= vertexCount)
+		throw std::out_of_range("vertexCount not set");
+	if (attributeType >= attributesData.size())
+		throw std::out_of_range("attribute not set");
+	int skip = getAttributeSkip(attributeType);
+	vertexData[skip + index * 3] = data.x;
+	vertexData[skip + index * 3 + 1] = data.y;
+	vertexData[skip + index * 3 + 2] = data.z;
 }
+
+void GameObject::setAttribute(int attributeType, int index, vec4 data){
+	if (index >= vertexCount)
+		throw std::out_of_range("vertexCount not set");
+	if (attributeType >= attributesData.size())
+		throw std::out_of_range("attribute not set");
+	int skip = getAttributeSkip(attributeType);
+	vertexData[skip + index * 4] = data.x;
+	vertexData[skip + index * 4 + 1] = data.y;
+	vertexData[skip + index * 4 + 2] = data.z;
+	vertexData[skip + index * 4 + 3] = data.w;
+}
+
+void GameObject::activateAttribute(int width){
+	if (NULL == vertexCount){
+		throw std::runtime_error("VertexCount not set");
+	}
+	attributesData.push_back(width);
+	int oldSize = vertexData.size();
+	vertexData.resize(oldSize + width * vertexCount);
+}
+
+void GameObject::setIndexCount(int count){
+	indexCount = count;
+	indexData.resize(count);
+	for (int i = 0; i < count; i++)
+		indexData[i] = i;
+}
+
+void GameObject::setIndex(int position, GLshort index){
+	if (index >= vertexCount)
+		throw std::out_of_range("index not existent in vertexs");
+	indexData[position] = index;
+}
+
+
 
 void GameObject::setPosition(vec3 position){ this->position = position; }
 void GameObject::setScale(float scale){ this->mscale = scale; }

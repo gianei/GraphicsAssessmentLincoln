@@ -12,16 +12,20 @@ class GameObject
 {
 private:
 	bool needRebuffer = false;
-	int vertexNumbers;
-	int indexNumbers;
+	bool isVertexCountSet = false;
+	
 	GLuint vertexBufferObject;
 	GLuint indexBufferObject;
 	GLuint vaoObject1;
 
 	ShaderProgram* shaderProgram;
 
-	vector<float> vertexPositions;
+	vector<float> vertexData;
+	int vertexCount = NULL;
 	vector<GLshort> indexData;
+	int indexCount = NULL;
+
+	vector<int> attributesData;
 
 	void rebuffer();
 
@@ -33,15 +37,13 @@ private:
 	mat4 rotationMatrix(){ return rotate(angleX, vec3(1, 0, 0)) * rotate(angleY, vec3(0, 1, 0)) * rotate(angleZ, vec3(0, 0, 1)); }
 
 	vec3 velocity;
+
+	int getAttributeSkip(int attributeIndex);
 public:
 	//GameObject();
-	GameObject(ShaderProgram* shaderProgram, int vertexNumber, int indexNumber);
+	GameObject(ShaderProgram* shaderProgram);
 	~GameObject();
 
-	void setVertexNumbers(int numbers);
-	void setPositionVertex(int index, glm::vec4 position);
-	void setIndexVertex(int index, GLshort data);
-	void setColorVertex(int index, glm::vec4 position);
 	void update();
 	void draw();
 
@@ -49,5 +51,14 @@ public:
 	void setScale(float scale);
 	void setAngle(vec3 angles);
 	mat4 modelMatrix(void);
+
+	void setIndex(int position, GLshort index);
+	void setIndexCount(int count);
+
+	void setVertexCount(int count);
+	void activateAttribute(int width);
+	void setAttribute(int attributeType, int index, vec3 data);
+	void setAttribute(int attributeType, int index, vec4 data);
+	
 };
 
