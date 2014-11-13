@@ -28,45 +28,61 @@ vec3 GCamera::direction(){
 }
 
 void GCamera::moveRight(){
-	lookAt += vec3(0.1f, 0.0f, 0.0f);
-	position += vec3(0.1f, 0.0f, 0.0f);	
+	vec3 vec = vec3(vec4(0.1f, 0.0f, 0.0f, 1.0f) * rotationMatrix());
+	lookAt += vec;
+	position += vec;
 }
 
 void GCamera::moveLeft(){
-	lookAt += vec3(-0.1f, 0.0f, 0.0f);
-	position += vec3(-0.1f, 0.0f, 0.0f);
+	vec3 vec = vec3(vec4(-0.1f, 0.0f, 0.0f, 1.0f) * rotationMatrix());
+	lookAt += vec;
+	position += vec;
 	
 }
 
 void GCamera::moveUp(){
-	lookAt += vec3(0.0f, 0.0f, 0.1f);
-	position += vec3(0.0f, 0.0f, 0.1f);
+	vec3 vec = vec3(vec4(0.0f, 0.1f, 0.0f, 1.0f) * rotationMatrix());
+	lookAt += vec;
+	position += vec;
 }
 void GCamera::moveDown(){
-	lookAt += vec3(0.0f, 0.0f, -0.1f);
-	position += vec3(0.0f, 0.0f, -0.1f);
+	vec3 vec = vec3(vec4(0.0f, -0.1f, 0.0f, 1.0f) * rotationMatrix());
+	lookAt += vec;
+	position += vec;
 }
 
 void GCamera::lookRight(){
-	rotate(0.4f, 1, true, vec3(0, 0, 1));
+	angleZ += 1.0;
+	rotate();
+	
 }
 
 void GCamera::lookLeft(){
-	rotate(0.4f, 1, false, vec3(0, 0, 1));
+	angleZ -= 1.0;
+	rotate();
+	
 }
 
 void GCamera::lookUp(){
-	rotate(0.4f, 1, false, vec3(1, 0, 0));
+	angleX -= 1.0;
+	rotate();
+	
 }
 void GCamera::lookDown(){
-	rotate(0.4f, 1, true, vec3(1, 0, 0));
+	angleX += 1.0;
+	rotate();
+	
 }
 
 
-void GCamera::rotate(float angularSpeed, float deltaTime, bool clockwise, vec3 axis){
-	int myDirection = clockwise ? -1 : 1;
-	lookAt = position + glm::rotate(direction(), angularSpeed * deltaTime * myDirection, axis);
+void GCamera::rotate(){
+	vec4 rotation = vec4(0.0f, 1.0f, 0.0f, 1.0f) * rotationMatrix();
+	//vec4 rotation = vec4(direction(), 1.0f) * rotationMatrix();
+	lookAt = position + vec3(rotation);
+
 
 }
+
+
 
 

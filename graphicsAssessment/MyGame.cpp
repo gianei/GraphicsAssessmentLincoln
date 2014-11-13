@@ -9,6 +9,7 @@
 #include "GameObject.h"
 #include "Triangle.h"
 #include "Cube.h"
+#include "InsideOutCube.h"
 
 GLuint vao;
 ShaderProgram *shaderProgram;
@@ -70,7 +71,9 @@ void initializeVertexBuffer()
 
 
 void MyGame::render(){
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	glClearDepth(1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	camera.writeOnShader(*shaderProgram);
 
@@ -81,6 +84,13 @@ void MyGame::render(){
 void MyGame::initialize()
 {
 	glEnable(GL_CULL_FACE);
+
+	glEnable(GL_DEPTH_TEST);
+	//glDepthMask(GL_TRUE); //what is it for?
+	glDepthFunc(GL_LEQUAL);
+	glDepthRange(0.0f, 1.0f);
+
+
 	//create GLSL Shaders, link into a GLSL program
 	std::vector<GLuint> shaderList;
 
@@ -95,18 +105,20 @@ void MyGame::initialize()
 
 	triangle = new Triangle(shaderProgram);
 	//triangle->setPosition(vec3(0.0f, 0.0f, 0.0f));
-
+	triangle->setAngle(vec3(45.0f, 0.0f, 0.0f));
 
 
 	cube = new Cube(shaderProgram); //8 36
 	cube->setScale(0.2f);
 	
-	//this->addGameObject(triangle);
+	this->addGameObject(triangle);
 	//this->addGameObject(triangle2);
 	this->addGameObject(cube);
 
-	glGenVertexArrays(1, &vao); //create a Vertex Array Object
-	glBindVertexArray(vao); //make the VAO active
+	this->addGameObject(new InsideOutCube(shaderProgram));
+
+	//glGenVertexArrays(1, &vao); //create a Vertex Array Object
+	//glBindVertexArray(vao); //make the VAO active
 
 }
 

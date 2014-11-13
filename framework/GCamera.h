@@ -1,7 +1,7 @@
 #pragma once
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>
-#include <glm/gtx/rotate_vector.hpp>
+//#include <glm/gtx/rotate_vector.hpp>
 #include "ShaderProgram.h"
 
 using namespace glm;
@@ -29,9 +29,14 @@ public:
 
 
 private:
-	vec3 position = vec3(0.0f, -1.0f, 0.5f);
+	vec3 position = vec3(0.0f, -1.0f, 0.0f);
 	vec3 lookAt = vec3(0.0f, 0.0f, 0.0f);
 	vec3 up = vec3(0.0f, 0.0f, 1.0f);
+
+	float angleX = 0.0f;
+	float angleY = 0.0f;
+	float angleZ = 0.0f;
+	mat4 rotationMatrix(){ return glm::rotate(angleX, vec3(1, 0, 0)) * glm::rotate(angleY, vec3(0, 1, 0)) * glm::rotate(angleZ, vec3(0, 0, 1)); }
 
 	float fieldOfView = 55.0f;
 	float aspectRatio = 1.0f;
@@ -41,6 +46,6 @@ private:
 	mat4 view();
 	mat4 projection();
 	vec3 direction();
-	void rotate(float angularSpeed, float deltaTime, bool clockwise, vec3 axis);
+	void rotate();
 };
 
