@@ -99,11 +99,15 @@ void Game::keyDown(SDL_KeyboardEvent* e)
 		break;
 	case SDLK_LSHIFT: break;
 	case SDLK_F1: break;
+	case SDLK_ESCAPE:
+		listenMouse = !listenMouse;
+		break;
 	}
 }
 
 void Game::startMainLoop(){
 	initialize();
+
 
 	SDL_Event e;
 	while (1)
@@ -113,16 +117,21 @@ void Game::startMainLoop(){
 		{
 			switch (e.type)
 			{
+			
 			case SDL_QUIT: exit(EXIT_SUCCESS);
 			case SDL_KEYDOWN: keyDown(&e.key); break;
 			case SDL_MOUSEMOTION:
+				if (!listenMouse)
+					break;
 				int x, y;
 				SDL_GetMouseState(&x, &y);
 				camera.lookXZ(-(y - 300), x - 300 );
+				break;			
 			}
 
 		}
-		SDL_WarpMouseInWindow(win, 300, 300);
+		if (listenMouse)
+			SDL_WarpMouseInWindow(win, 300, 300);
 
 		//GET INPUT HERE - PLACEHOLDER
 

@@ -10,6 +10,8 @@ private:
 	SDL_Window *win; //pointer to the SDL_Window
 	SDL_GLContext context; //the SDL_GLContext
 
+	bool listenMouse = true;
+
 	vector<GameObject*>* gameObjects = new vector<GameObject*>;
 
 	void initializeSDL();
