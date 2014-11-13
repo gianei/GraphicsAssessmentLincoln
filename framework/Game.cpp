@@ -108,15 +108,21 @@ void Game::startMainLoop(){
 	SDL_Event e;
 	while (1)
 	{
+		
 		while (SDL_PollEvent(&e))
 		{
 			switch (e.type)
 			{
 			case SDL_QUIT: exit(EXIT_SUCCESS);
 			case SDL_KEYDOWN: keyDown(&e.key); break;
+			case SDL_MOUSEMOTION:
+				int x, y;
+				SDL_GetMouseState(&x, &y);
+				camera.lookXZ(-(y - 300), x - 300 );
 			}
 
 		}
+		SDL_WarpMouseInWindow(win, 300, 300);
 
 		//GET INPUT HERE - PLACEHOLDER
 

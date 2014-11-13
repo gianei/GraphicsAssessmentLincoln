@@ -25,6 +25,7 @@ public:
 	void lookLeft();
 	void lookRight();
 	void lookUp();
+	void lookXZ(int amountX, int amountZ);
 	void lookDown();
 
 

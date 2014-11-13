@@ -45,6 +45,7 @@ void GCamera::moveUp(){
 	lookAt += vec;
 	position += vec;
 }
+
 void GCamera::moveDown(){
 	vec3 vec = vec3(vec4(0.0f, -0.1f, 0.0f, 1.0f) * rotationMatrix());
 	lookAt += vec;
@@ -68,6 +69,12 @@ void GCamera::lookUp(){
 	rotate();
 	
 }
+void GCamera::lookXZ(int amountX, int amountZ){
+	angleX -= amountX * 0.1;
+	angleZ += amountZ * 0.1;
+	rotate();
+}
+
 void GCamera::lookDown(){
 	angleX += 1.0;
 	rotate();
