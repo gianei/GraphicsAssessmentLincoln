@@ -35,8 +35,8 @@ Landscape::Landscape(ShaderProgram* shaderProgram)
 		float myRandom = distributionPosition(generator);
 		//setAttribute(0, i * (squareNumbersAtSide + 1) + j, vec3(i * 1.0f, j * 1.0f, 4 * myRandom));
 		setAttribute(0, i * (squareNumbersAtSide + 1) + j, vec3(i * 1.0f, j * 1.0f, pow(j*0.05f + i * 0.01f, 2) + myRandom));
-		//setAttribute(1, i * (squareNumbersAtSide + 1) + j, vec4(myRandom, myRandom, myRandom, 1.0f));
-		setAttribute(1, i * (squareNumbersAtSide + 1) + j, vec4(0.5f, 0.5f, 0.5f, 1.0f));
+		setAttribute(1, i * (squareNumbersAtSide + 1) + j, vec4(0.5f + myRandom, 0.5f + myRandom* 0.1, 0.5f + myRandom* 0.1, 1.0f));
+		//setAttribute(1, i * (squareNumbersAtSide + 1) + j, vec4(0.5f, 0.5f, 0.5f, 1.0f));
 		}
 
 	//setting indexs

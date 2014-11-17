@@ -12,29 +12,46 @@ out vec4 outputColor;
 
 //uniform vec3 modelSpaceLightPos;
 
-//uniform vec4 lightIntensity;
-//uniform vec4 ambientIntensity;
+vec4 lightIntensity;
+vec4 ambientIntensity;
+vec4 lightAttenuation;
 
+vec3 modelSpaceLightPos;
+vec3 lightDir;
+
+bool bUseRSquare = true;
+
+vec4 ApplyLightIntensity(in vec3 cameraSpacePosition, out vec3 lightDirection)
+{
+    vec3 lightDifference =  modelSpaceLightPos - cameraSpacePosition;
+    float lightDistanceSqr = dot(lightDifference, lightDifference);
+    lightDirection = lightDifference * inversesqrt(lightDistanceSqr);
+    
+    float distFactor = bUseRSquare ? lightDistanceSqr : sqrt(lightDistanceSqr);
+    
+    return lightIntensity * (1 / ( 1.0 + lightAttenuation * distFactor));
+}
 
 void main()
 {
-	vec4 lightIntensity = vec4(0.5f,0.5f,0.5f,1.0f);
-	vec4 ambientIntensity = vec4(1.0f,1.0f,1.0f,1.0f);
+	lightIntensity = vec4(0.9f,0.9f,0.9f,1.0f);
+	ambientIntensity = vec4(0.0f,0.0f,0.0f,1.0f);
+	lightAttenuation = vec4(0.9f,0.9f,0.9f,1.0f);
 
-	vec3 modelSpaceLightPos = vec3(5.0f, 5.0f, 20.0f);
+	modelSpaceLightPos = vec3(5.0f, 5.0f, 20.0f);
 
-	vec3 lightDir = normalize(modelSpaceLightPos - modelSpacePosition);
-	//vec3 lightDir = normalize(vec3(0.0f,0.0f,1.0f));
+	lightDir = normalize(modelSpaceLightPos - modelSpacePosition);
+	//lightDir = normalize(vec3(0.0f,0.0f,1.0f));
     
     float cosAngIncidence = dot(normalize(vertexNormal), lightDir);
     cosAngIncidence = clamp(cosAngIncidence, 0, 1);
 
 
-	//outputColor = theColor;
+	vec4 attenIntensity = ApplyLightIntensity(modelSpacePosition, lightDir);
 
-
-	//outputColor = (diffuseColor * lightIntensity * cosAngIncidence) +
+	//outputColor = (diffuseColor * attenIntensity * cosAngIncidence) +
     //    (diffuseColor * ambientIntensity);
-	outputColor = diffuseColor * lightIntensity * cosAngIncidence;
+	outputColor = diffuseColor * lightIntensity * cosAngIncidence +  (diffuseColor * ambientIntensity);
 
 }
+
