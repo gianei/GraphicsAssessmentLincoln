@@ -4,8 +4,10 @@ class Landscape :
 	public GameObject
 {
 private:
+	vec3 triangleNormal();
 	vec4 getRandomColor();
 	vec3 getRandomPosition();
+	vec3 triangleNormal(int triangleIndex);
 public:
 	Landscape(ShaderProgram* shaderProgram);
 	~Landscape();

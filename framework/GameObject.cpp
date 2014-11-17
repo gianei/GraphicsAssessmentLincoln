@@ -45,6 +45,7 @@ void GameObject::update(){
 }
 
 void GameObject::draw(){
+	shaderProgram->Activate();
 	if (needRebuffer)
 		rebuffer();
 
@@ -134,3 +135,30 @@ mat4 GameObject::modelMatrix(void){
 		glm::scale(vec3(mscale, mscale, mscale)) *
 		rotationMatrix();
 }
+
+
+
+vec3 GameObject::vertexNormal(int triangleIndex1, int triangleIndex2, int triangleIndex3){
+	/*vertex v1, v2, v3, ....
+		triangle tr1, tr2, tr3 // all share vertex v1
+		v1.normal = normalize(tr1.normal + tr2.normal + tr3.normal)*/
+	return vec3();
+}
+void GameObject::getTriangleFromIndex(int triangleIndex, vec3* out){
+	if (triangleIndex * 3 >= indexCount)
+		throw std::out_of_range("triangle index out of range");
+	out[0] = vec3(
+		vertexData[indexData[triangleIndex * 3 + 0] * attributesData[0] + 0],
+		vertexData[indexData[triangleIndex * 3 + 0] * attributesData[0] + 1],
+		vertexData[indexData[triangleIndex * 3 + 0] * attributesData[0] + 2]);
+	out[1] = vec3(
+		vertexData[indexData[triangleIndex * 3 + 1] * attributesData[0] + 0],
+		vertexData[indexData[triangleIndex * 3 + 1] * attributesData[0] + 1],
+		vertexData[indexData[triangleIndex * 3 + 1] * attributesData[0] + 2]);
+	out[2] = vec3(
+		vertexData[indexData[triangleIndex * 3 + 2] * attributesData[0] + 0],
+		vertexData[indexData[triangleIndex * 3 + 2] * attributesData[0] + 1],
+		vertexData[indexData[triangleIndex * 3 + 2] * attributesData[0] + 2]);
+
+}
+

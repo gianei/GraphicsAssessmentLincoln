@@ -39,8 +39,14 @@ private:
 	vec3 velocity;
 
 	int getAttributeSkip(int attributeIndex);
+
+
+
+
+	vec3 vertexNormal(int triangleIndex1, int triangleIndex2, int triangleIndex3);
 protected:
 	void rebuffer();
+	void getTriangleFromIndex(int triangleIndex, vec3* out);
 public:
 	//GameObject();
 	GameObject(ShaderProgram* shaderProgram);

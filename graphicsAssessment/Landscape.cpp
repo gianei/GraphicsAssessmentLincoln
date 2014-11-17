@@ -1,24 +1,27 @@
 #include "Landscape.h"
 #include <random>
+#include <math.h>
 
 Landscape::Landscape(ShaderProgram* shaderProgram)
 	:GameObject(shaderProgram)
 {
-	int squareNumbersAtSide = 200;
+	int squareNumbersAtSide = 100;
 	//vertexCount = (side + 1)^2
 	//index count = side * side * 6 //two triangels  per square
 
+	vector<vec3> normals = vector<vec3>(squareNumbersAtSide * squareNumbersAtSide * 2);
 
 
 	std::random_device generator;
 	std::uniform_real_distribution<double> distributionPosition(0.0f, 0.5f);
-	setScale(0.05f);
-	setPosition(vec3(-5, -5, -2));
+	setScale(0.1f);
+	setPosition(vec3(-5, -5, -5));
 
 	setVertexCount((squareNumbersAtSide + 1)*(squareNumbersAtSide + 1));
 	setIndexCount(squareNumbersAtSide * squareNumbersAtSide * 6);
 	activateAttribute(3);
 	activateAttribute(4);
+	activateAttribute(3);
 
 	//TODO fix this, rebuffer is overkill
 	this->rebuffer();
@@ -30,10 +33,13 @@ Landscape::Landscape(ShaderProgram* shaderProgram)
 	for (int i = 0; i <= squareNumbersAtSide; i++)
 		for (int j = 0; j <= squareNumbersAtSide; j++){	
 		float myRandom = distributionPosition(generator);
-		setAttribute(0, i * (squareNumbersAtSide + 1) + j, vec3(i * 1.0f, j * 1.0f, 2 * myRandom));
-		setAttribute(1, i * (squareNumbersAtSide + 1) + j, vec4(myRandom, myRandom, myRandom, 1.0f));
+		//setAttribute(0, i * (squareNumbersAtSide + 1) + j, vec3(i * 1.0f, j * 1.0f, 4 * myRandom));
+		setAttribute(0, i * (squareNumbersAtSide + 1) + j, vec3(i * 1.0f, j * 1.0f, pow(j*0.05f + i * 0.01f, 2) + myRandom));
+		//setAttribute(1, i * (squareNumbersAtSide + 1) + j, vec4(myRandom, myRandom, myRandom, 1.0f));
+		setAttribute(1, i * (squareNumbersAtSide + 1) + j, vec4(0.5f, 0.5f, 0.5f, 1.0f));
 		}
 
+	//setting indexs
 	for (int i = 0; i < squareNumbersAtSide; i++)
 		for (int j = 0; j < squareNumbersAtSide; j++){
 			setIndex((i * squareNumbersAtSide) * 6 + (j * 6) + 0, i * (squareNumbersAtSide + 1) + j);
@@ -44,6 +50,32 @@ Landscape::Landscape(ShaderProgram* shaderProgram)
 			setIndex((i * squareNumbersAtSide) * 6 + (j * 6) + 5, i * (squareNumbersAtSide + 1) + j);
 		}
 
+
+	for (int i = 0; i < squareNumbersAtSide * squareNumbersAtSide * 2; i++)
+		normals[i] = triangleNormal(i);
+
+	//set vertices normals
+	for (int i = 0; i <= squareNumbersAtSide; i++)
+		for (int j = 0; j <= squareNumbersAtSide; j++){
+		//set a up normal for the borders
+		if (i == 0 || i == squareNumbersAtSide || j == 0 || j == squareNumbersAtSide){
+			setAttribute(2, i * (squareNumbersAtSide + 1) + j, vec3(0,0,1));
+		}
+		else {
+			//TODO this can be wrong
+			setAttribute(2, i * (squareNumbersAtSide + 1) + j,
+				normalize(
+				normals[((i - 1) * 2 * squareNumbersAtSide) + ((j - 1) * 2 + 0)] + 
+				normals[((i - 1) * 2 * squareNumbersAtSide) + ((j - 1) * 2 + 1)] +
+				normals[((i - 1) * 2 * squareNumbersAtSide) + ((j - 1) * 2 + 2)] +
+				normals[(i * 2 * squareNumbersAtSide) + ((j - 1) * 2 + 0)] +
+				normals[(i * 2 * squareNumbersAtSide) + ((j - 1) * 2 + 1)] +
+				normals[(i * 2 * squareNumbersAtSide) + ((j - 1) * 2 + 2)]));
+		}
+		}
+
+
+	return;
 
 }
 
@@ -66,6 +98,21 @@ vec3 Landscape::getRandomPosition(){
 }
 
 
+vec3 Landscape::triangleNormal(int triangleIndex){
+	vec3* triangle = new vec3[3];
+
+	getTriangleFromIndex(triangleIndex, triangle);
+	/*triangle(v1, v2, v3)
+	edge1 = v2 - v1
+	edge2 = v3 - v1
+	triangle.normal = cross(edge1, edge2).normalize()*/
+
+	vec3 norm = normalize(cross(triangle[1] - triangle[0], triangle[2] - triangle[0]));
+	return norm;
+
+}
+
 Landscape::~Landscape()
 {
+	
 }

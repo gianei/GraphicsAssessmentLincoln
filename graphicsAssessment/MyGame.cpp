@@ -14,6 +14,7 @@
 
 GLuint vao;
 ShaderProgram *shaderProgram;
+ShaderProgram *shaderProgramGurro;
 
 class MyGame : public Game{
 private:
@@ -78,6 +79,7 @@ void MyGame::render(){
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	camera.writeOnShader(*shaderProgram);
+	camera.writeOnShader(*shaderProgramGurro);
 
 }
 
@@ -101,6 +103,11 @@ void MyGame::initialize()
 	shaderProgram->CreateShader("fragmentShader.fsh", GL_FRAGMENT_SHADER);
 	shaderProgram->Link();
 
+	shaderProgramGurro = new ShaderProgram();
+	shaderProgramGurro->CreateShader("vertexShaderG.vsh", GL_VERTEX_SHADER);
+	shaderProgramGurro->CreateShader("fragmentShaderG.fsh", GL_FRAGMENT_SHADER);
+	shaderProgramGurro->Link();
+
 	camera = GCamera();
 
 	//initializeVertexBuffer(); //load data into a vertex buffer
@@ -119,7 +126,7 @@ void MyGame::initialize()
 
 	this->addGameObject(new InsideOutCube(shaderProgram));
 
-	landscape = new Landscape(shaderProgram);
+	landscape = new Landscape(shaderProgramGurro);
 
 	this->addGameObject(landscape);
 
