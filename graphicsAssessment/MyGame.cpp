@@ -10,6 +10,7 @@
 #include "Triangle.h"
 #include "Cube.h"
 #include "InsideOutCube.h"
+#include "Landscape.h"
 
 GLuint vao;
 ShaderProgram *shaderProgram;
@@ -19,6 +20,7 @@ private:
 	GameObject* triangle;
 	GameObject* triangle2;
 	GameObject* cube;
+	GameObject* landscape;
 public:
 	void render();
 	void initialize();
@@ -116,6 +118,10 @@ void MyGame::initialize()
 	this->addGameObject(cube);
 
 	this->addGameObject(new InsideOutCube(shaderProgram));
+
+	landscape = new Landscape(shaderProgram);
+
+	this->addGameObject(landscape);
 
 	//glGenVertexArrays(1, &vao); //create a Vertex Array Object
 	//glBindVertexArray(vao); //make the VAO active

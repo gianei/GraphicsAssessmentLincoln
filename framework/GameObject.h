@@ -27,7 +27,7 @@ private:
 
 	vector<int> attributesData;
 
-	void rebuffer();
+	
 
 	glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f);
 	float mscale = 1.0f;
@@ -39,6 +39,8 @@ private:
 	vec3 velocity;
 
 	int getAttributeSkip(int attributeIndex);
+protected:
+	void rebuffer();
 public:
 	//GameObject();
 	GameObject(ShaderProgram* shaderProgram);
