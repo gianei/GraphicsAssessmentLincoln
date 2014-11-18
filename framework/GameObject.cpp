@@ -42,6 +42,11 @@ void GameObject::rebuffer(){
 
 void GameObject::update(){
 	position += velocity;
+
+	angleZ += rotationZ;
+	if (angleZ > 360)
+		angleZ -= 360.0f;
+	
 }
 
 void GameObject::draw(){

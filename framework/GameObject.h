@@ -30,10 +30,6 @@ private:
 	
 
 	glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f);
-	float mscale = 1.0f;
-	float angleX = 0.0f;
-	float angleY = 0.0f;
-	float angleZ = 0.0f;
 	mat4 rotationMatrix(){ return rotate(angleX, vec3(1, 0, 0)) * rotate(angleY, vec3(0, 1, 0)) * rotate(angleZ, vec3(0, 0, 1)); }
 
 	vec3 velocity;
@@ -45,6 +41,11 @@ private:
 
 	vec3 vertexNormal(int triangleIndex1, int triangleIndex2, int triangleIndex3);
 protected:
+	float mscale = 1.0f;
+	float angleX = 0.0f;
+	float angleY = 0.0f;
+	float angleZ = 0.0f;
+
 	void rebuffer();
 	void getTriangleFromIndex(int triangleIndex, vec3* out);
 public:
@@ -67,6 +68,9 @@ public:
 	void activateAttribute(int width);
 	void setAttribute(int attributeType, int index, vec3 data);
 	void setAttribute(int attributeType, int index, vec4 data);
+
+
+	double rotationZ = 0.0f;
 	
 };
 

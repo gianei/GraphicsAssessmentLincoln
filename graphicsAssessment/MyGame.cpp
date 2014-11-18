@@ -11,10 +11,12 @@
 #include "Cube.h"
 #include "InsideOutCube.h"
 #include "Landscape.h"
+#include "Piramid.h"
 
 GLuint vao;
 ShaderProgram *shaderProgram;
 ShaderProgram *shaderProgramGurro;
+ShaderProgram *shaderProgramGUI;
 
 class MyGame : public Game{
 private:
@@ -108,12 +110,37 @@ void MyGame::initialize()
 	shaderProgramGurro->CreateShader("fragmentShaderG.fsh", GL_FRAGMENT_SHADER);
 	shaderProgramGurro->Link();
 
+	shaderProgramGUI = new ShaderProgram();
+	shaderProgramGUI->CreateShader("vertexShaderGUI.vsh", GL_VERTEX_SHADER);
+	shaderProgramGUI->CreateShader("fragmentShader.fsh", GL_FRAGMENT_SHADER);
+	shaderProgramGUI->Link();
+
+	Triangle* triangleGUI = new Triangle(shaderProgramGUI);
+	triangleGUI->setScale(0.20);
+	triangleGUI->setPosition(vec3(-0.875f, -0.875f, 0.0f));
+	triangleGUI->rotationZ = 0.05f;
+	this->addGameObject(triangleGUI);
+
+	Triangle* rightTriangle = new Triangle(shaderProgramGUI);
+	rightTriangle->setAttribute(0, 0, vec3(0.3f, 1.0f, 0.0f));
+	rightTriangle->setAttribute(1, 0, vec4(1.0f, 1.0f, 0.0f, 1.0f));
+	rightTriangle->setAttribute(1, 1, vec4(0.5f, 0.0f, 0.0f, 1.0f));
+	rightTriangle->setAttribute(1, 2, vec4(0.5f, 0.0f, 0.0f, 1.0f));
+	rightTriangle->setScale(0.20);
+	rightTriangle->setPosition(vec3(0.875f, -0.875f, 0.0f));
+	this->addGameObject(rightTriangle);
+
 	camera = GCamera();
 
 	//initializeVertexBuffer(); //load data into a vertex buffer
 
+	Piramid* piramid = new Piramid(shaderProgram);
+	piramid->setPosition(vec3(2, 0, 0));
+	this->addGameObject(piramid);
+
+
 	triangle = new Triangle(shaderProgram);
-	//triangle->setPosition(vec3(0.0f, 0.0f, 0.0f));
+	//triangle->setPosition(vec3(0.0f, 0.0f, 0.0f));	
 	triangle->setAngle(vec3(45.0f, 0.0f, 0.0f));
 
 
