@@ -1,13 +1,58 @@
 #include "Landscape.h"
+#include "Matrix.h"
 #include <random>
 #include <math.h>
+
+
+double Landscape::getClosestDistance(vec2 point){
+	float distance = 1000;
+	for (int i = 0; i < pointNumbers; i++){
+		float myDistance = getEuclidianDistance(point, points[i]);
+		if (myDistance < distance)
+			distance = myDistance;
+	}
+	return distance;
+}
+
+double Landscape::getManhattanDistance(vec2 origin, vec2 dest){
+	double x_difference = origin.x - dest.x;
+	double y_difference = origin.y - dest.y;
+
+	return abs(x_difference) + abs(y_difference);
+}
+double Landscape::getEuclidianDistance(vec2 origin, vec2 dest){
+	double x_difference = origin.x - dest.x;
+	double y_difference = origin.y - dest.y;
+
+	return sqrt(x_difference * x_difference + y_difference * y_difference);
+}
 
 Landscape::Landscape(ShaderProgram* shaderProgram)
 	:GameObject(shaderProgram)
 {
-	int squareNumbersAtSide = 100;
+	int squareNumbersAtSide = 99;
 	//vertexCount = (side + 1)^2
 	//index count = side * side * 6 //two triangels  per square
+	//image = Matrix(100, 100);
+	pointNumbers = 30;
+	points = vector<vec2>(pointNumbers);
+
+	//populte random points
+	std::random_device generatorPints;
+	std::uniform_int_distribution<int> distributionPoints(0, 99);
+	for (int i = 0; i < pointNumbers; i++){
+		points[i] = vec2(distributionPoints(generatorPints), distributionPoints(generatorPints));
+	}
+
+	for (int i = 0; i < 100; i++)
+		for (int j = 0; j < 100; j++){
+		image.set(getClosestDistance(vec2(i, j)), i, j);
+		}
+
+
+
+
+
 
 	vector<vec3> normals = vector<vec3>(squareNumbersAtSide * squareNumbersAtSide * 2);
 
@@ -34,9 +79,11 @@ Landscape::Landscape(ShaderProgram* shaderProgram)
 		for (int j = 0; j <= squareNumbersAtSide; j++){	
 		float myRandom = distributionPosition(generator);
 		//setAttribute(0, i * (squareNumbersAtSide + 1) + j, vec3(i * 1.0f, j * 1.0f, 4 * myRandom));
-		setAttribute(0, i * (squareNumbersAtSide + 1) + j, vec3(i * 1.0f, j * 1.0f, pow(j*0.05f + i * 0.01f, 2) + myRandom));
-		setAttribute(1, i * (squareNumbersAtSide + 1) + j, vec4(0.5f + myRandom, 0.5f + myRandom* 0.1, 0.5f + myRandom* 0.1, 1.0f));
+		//setAttribute(0, i * (squareNumbersAtSide + 1) + j, vec3(i * 1.0f, j * 1.0f, pow(j*0.05f + i * 0.01f, 2) + myRandom));
+		setAttribute(0, i * (squareNumbersAtSide + 1) + j, vec3(i * 1.0f, j * 1.0f, image.get(i,j) * 0.5f));
+		//setAttribute(1, i * (squareNumbersAtSide + 1) + j, vec4(0.5f + myRandom, 0.5f + myRandom* 0.1, 0.5f + myRandom* 0.1, 1.0f));
 		//setAttribute(1, i * (squareNumbersAtSide + 1) + j, vec4(0.5f, 0.5f, 0.5f, 1.0f));
+		setAttribute(1, i * (squareNumbersAtSide + 1) + j, vec4(image.get(i, j) * 0.05f, image.get(i, j) * 0.1f, image.get(i, j) * 0.5f, 1.0f));
 		}
 
 	//setting indexs
