@@ -70,6 +70,8 @@ public:
 	void setAttribute(int attributeType, int index, vec4 data);
 
 
+	double rotationX = 0.0f;
+	double rotationY = 0.0f;
 	double rotationZ = 0.0f;
 	
 };

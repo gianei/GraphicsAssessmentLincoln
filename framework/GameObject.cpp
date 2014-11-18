@@ -43,6 +43,14 @@ void GameObject::rebuffer(){
 void GameObject::update(){
 	position += velocity;
 
+	angleX += rotationX;
+	if (angleX > 360)
+		angleX -= 360.0f;
+
+	angleY += rotationY;
+	if (angleY > 360)
+		angleY -= 360.0f;
+
 	angleZ += rotationZ;
 	if (angleZ > 360)
 		angleZ -= 360.0f;

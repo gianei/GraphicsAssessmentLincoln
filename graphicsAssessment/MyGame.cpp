@@ -134,9 +134,27 @@ void MyGame::initialize()
 
 	//initializeVertexBuffer(); //load data into a vertex buffer
 
-	Piramid* piramid = new Piramid(shaderProgram);
-	piramid->setPosition(vec3(2, 0, 0));
-	this->addGameObject(piramid);
+	Piramid* piramid1 = new Piramid(shaderProgram);
+	piramid1->setPosition(vec3(2, 0, 0));
+	piramid1->setScale(0.25);
+	piramid1->rotationX = 0.1f;
+	this->addGameObject(piramid1);
+	Piramid* piramid4 = new Piramid(shaderProgram);
+	piramid4->setPosition(vec3(2.5f, 0.5f, 0));
+	piramid4->setScale(0.25);
+	piramid4->rotationY = 0.1f;
+	this->addGameObject(piramid4);
+	Piramid* piramid2 = new Piramid(shaderProgram);
+	piramid2->setPosition(vec3(3, 1, 0));
+	piramid2->setScale(0.5);
+	piramid2->rotationZ = 0.1f;
+	this->addGameObject(piramid2);
+	Piramid* piramid3 = new Piramid(shaderProgram);
+	piramid3->setPosition(vec3(4, 2, 0));
+	piramid3->rotationX = 0.1f;
+	piramid3->rotationY = 0.1f;
+	piramid3->rotationZ = 0.1f;
+	this->addGameObject(piramid3);
 
 
 	triangle = new Triangle(shaderProgram);
@@ -145,11 +163,19 @@ void MyGame::initialize()
 
 
 	cube = new Cube(shaderProgram); //8 36
+	cube->rotationX = 0.1f;
+	cube->rotationY = 0.1f;
+	cube->rotationZ = 0.1f;
 	cube->setScale(0.2f);
 	
 	this->addGameObject(triangle);
 	//this->addGameObject(triangle2);
 	this->addGameObject(cube);
+
+	Cube* cube2 = new Cube(shaderProgram); //8 36
+	cube2->setPosition(vec3(0, 0, -1));
+	cube2->setScale(0.4f);
+	this->addGameObject(cube2);
 
 	this->addGameObject(new InsideOutCube(shaderProgram));
 
