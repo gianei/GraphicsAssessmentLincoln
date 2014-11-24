@@ -20,6 +20,8 @@ public:
 
 	void moveRight();
 	void moveLeft();
+	void moveForward();
+	void moveBackward();
 	void moveUp();
 	void moveDown();
 	void lookLeft();

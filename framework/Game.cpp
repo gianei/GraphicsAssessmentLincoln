@@ -91,9 +91,17 @@ void Game::keyDown(SDL_KeyboardEvent* e)
 		break;
 	case SDLK_w:
 		if (e->keysym.mod & KMOD_SHIFT) camera.lookUp();
-		else camera.moveUp();
+		else camera.moveForward();
 		break;
 	case SDLK_s:
+		if (e->keysym.mod & KMOD_SHIFT) camera.lookDown();
+		else camera.moveBackward();
+		break;
+	case SDLK_e:
+		if (e->keysym.mod & KMOD_SHIFT) camera.lookUp();
+		else camera.moveUp();
+		break;
+	case SDLK_q:
 		if (e->keysym.mod & KMOD_SHIFT) camera.lookDown();
 		else camera.moveDown();
 		break;
@@ -101,6 +109,31 @@ void Game::keyDown(SDL_KeyboardEvent* e)
 	case SDLK_F1: break;
 	case SDLK_ESCAPE:
 		listenMouse = !listenMouse;
+		break;
+
+	case SDLK_i:
+		lightPosition += vec3(0.0f, 0.2f, 0.0f);
+		light->setPosition(vec3(-5, -5, -5) + lightPosition * 0.1f);
+		break;
+	case SDLK_k:
+		lightPosition += vec3(0.0f, -0.2f, 0.0f);
+		light->setPosition(vec3(-5, -5, -5) + lightPosition * 0.1f);
+		break;
+	case SDLK_l:
+		lightPosition += vec3(0.2f, 0.0f, 0.0f);
+		light->setPosition(vec3(-5, -5, -5) + lightPosition * 0.1f);
+		break;
+	case SDLK_j:
+		lightPosition += vec3(-0.2f, 0.0f, 0.0f);
+		light->setPosition(vec3(-5, -5, -5) + lightPosition * 0.1f);
+		break;
+	case SDLK_u:
+		lightPosition += vec3(0.0f, 0.0f, -0.2f);
+		light->setPosition(vec3(-5, -5, -5) + lightPosition * 0.1f);
+		break;
+	case SDLK_o:
+		lightPosition += vec3(0.0f, 0.0f, 0.2f);
+		light->setPosition(vec3(-5, -5, -5) + lightPosition * 0.1f);
 		break;
 	}
 }

@@ -83,6 +83,8 @@ void MyGame::render(){
 	camera.writeOnShader(*shaderProgram);
 	camera.writeOnShader(*shaderProgramGurro);
 
+	shaderProgramGurro->SetVariable("modelSpaceLightPos", lightPosition);
+
 }
 
 
@@ -176,6 +178,19 @@ void MyGame::initialize()
 	cube2->setPosition(vec3(0, 0, -1));
 	cube2->setScale(0.4f);
 	this->addGameObject(cube2);
+
+	light = new Cube(shaderProgram); //8 36
+	light->setPosition(vec3(-5,-5,-5) + lightPosition * 0.1f);
+	light->setScale(0.25f);
+	light->setAttribute(1, 0, vec4(1.0f, 1.0f, 1.0f, 1.0f));
+	light->setAttribute(1, 1, vec4(1.0f, 1.0f, 1.0f, 1.0f));
+	light->setAttribute(1, 2, vec4(1.0f, 1.0f, 1.0f, 1.0f));
+	light->setAttribute(1, 3, vec4(1.0f, 1.0f, 1.0f, 1.0f));
+	light->setAttribute(1, 4, vec4(1.0f, 1.0f, 1.0f, 1.0f));
+	light->setAttribute(1, 5, vec4(1.0f, 1.0f, 1.0f, 1.0f));
+	light->setAttribute(1, 6, vec4(1.0f, 1.0f, 1.0f, 1.0f));
+	light->setAttribute(1, 7, vec4(1.0f, 1.0f, 1.0f, 1.0f));
+	this->addGameObject(light);
 
 	this->addGameObject(new InsideOutCube(shaderProgram));
 

@@ -40,14 +40,26 @@ void GCamera::moveLeft(){
 	
 }
 
-void GCamera::moveUp(){
+void GCamera::moveForward(){
 	vec3 vec = vec3(vec4(0.0f, 0.1f, 0.0f, 1.0f) * rotationMatrix());
 	lookAt += vec;
 	position += vec;
 }
 
-void GCamera::moveDown(){
+void GCamera::moveBackward(){
 	vec3 vec = vec3(vec4(0.0f, -0.1f, 0.0f, 1.0f) * rotationMatrix());
+	lookAt += vec;
+	position += vec;
+}
+
+void GCamera::moveUp(){
+	vec3 vec = vec3(vec4(0.0f, 0.0f, 0.1f, 1.0f) * rotationMatrix());
+	lookAt += vec;
+	position += vec;
+}
+
+void GCamera::moveDown(){
+	vec3 vec = vec3(vec4(0.0f, 0.0f, -0.1f, 1.0f) * rotationMatrix());
 	lookAt += vec;
 	position += vec;
 }
@@ -72,6 +84,10 @@ void GCamera::lookUp(){
 void GCamera::lookXZ(int amountX, int amountZ){
 	angleX -= amountX * 0.1;
 	angleZ += amountZ * 0.1;
+	if (angleX > 89)
+		angleX = 89;
+	if (angleX < -89)
+		angleX = -89;
 	rotate();
 }
 

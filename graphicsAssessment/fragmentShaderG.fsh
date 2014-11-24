@@ -16,7 +16,7 @@ vec4 lightIntensity;
 vec4 ambientIntensity;
 vec4 lightAttenuation;
 
-vec3 modelSpaceLightPos;
+uniform vec3 modelSpaceLightPos;
 vec3 lightDir;
 
 bool bUseRSquare = true;
@@ -38,7 +38,7 @@ void main()
 	ambientIntensity = vec4(0.0f,0.0f,0.0f,1.0f);
 	lightAttenuation = vec4(0.9f,0.9f,0.9f,1.0f);
 
-	modelSpaceLightPos = vec3(5.0f, 5.0f, 20.0f);
+	//modelSpaceLightPos = vec3(5.0f, 5.0f, 20.0f);
 
 	lightDir = normalize(modelSpaceLightPos - modelSpacePosition);
 	//lightDir = normalize(vec3(0.0f,0.0f,1.0f));

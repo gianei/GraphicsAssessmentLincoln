@@ -8,6 +8,7 @@ double Landscape::getClosestDistance(vec2 point){
 	float distance = 1000;
 	for (int i = 0; i < pointNumbers; i++){
 		float myDistance = getEuclidianDistance(point, points[i]);
+		//float myDistance = getManhattanDistance(point, points[i]);
 		if (myDistance < distance)
 			distance = myDistance;
 	}
@@ -83,7 +84,8 @@ Landscape::Landscape(ShaderProgram* shaderProgram)
 		setAttribute(0, i * (squareNumbersAtSide + 1) + j, vec3(i * 1.0f, j * 1.0f, image.get(i,j) * 0.5f));
 		//setAttribute(1, i * (squareNumbersAtSide + 1) + j, vec4(0.5f + myRandom, 0.5f + myRandom* 0.1, 0.5f + myRandom* 0.1, 1.0f));
 		//setAttribute(1, i * (squareNumbersAtSide + 1) + j, vec4(0.5f, 0.5f, 0.5f, 1.0f));
-		setAttribute(1, i * (squareNumbersAtSide + 1) + j, vec4(image.get(i, j) * 0.05f, image.get(i, j) * 0.1f, image.get(i, j) * 0.5f, 1.0f));
+		//setAttribute(1, i * (squareNumbersAtSide + 1) + j, vec4(image.get(i, j) * 0.05f, image.get(i, j) * 0.1f, image.get(i, j) * 0.5f, 1.0f));
+		setAttribute(1, i * (squareNumbersAtSide + 1) + j, vec4(0.5f + image.get(i, j) * 0.005f, 0.5 + image.get(i, j) * 0.005f, 0.5 + image.get(i, j) * 0.05f, 1.0f));
 		}
 
 	//setting indexs

@@ -2,10 +2,13 @@
 #include <SDL.h>
 #include "GCamera.h"
 #include "GameObject.h"
+#include "Cube.h"
 
 class Game {
 protected:
 	GCamera camera;
+	vec3 lightPosition = vec3(5.0f, 5.0f, 20.0f); //TODO not in the correct place
+	Cube* light;//TODO wrong place;
 private:
 	SDL_Window *win; //pointer to the SDL_Window
 	SDL_GLContext context; //the SDL_GLContext
