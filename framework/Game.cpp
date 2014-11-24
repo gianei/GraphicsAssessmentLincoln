@@ -72,71 +72,7 @@ void Game::cleanUp()
 	std::cout << "Cleaning up OK!\n";
 }
 
-void Game::keyDown(SDL_KeyboardEvent* e)
-{
-	switch (e->keysym.sym)
-	{
-	case SDLK_a: /* ’A’ key */
-		
-		if (e->keysym.mod & KMOD_SHIFT) camera.lookLeft();
-		/*{ // one of the shift keys was pressed 
-			//if (e->keysym.mod & KMOD_LSHIFT) printf("lshift\n");
-			//if (e->keysym.mod & KMOD_RSHIFT) printf("rshift\n");
-		}*/
-		else camera.moveLeft();
-		break;
-	case SDLK_d:
-		if (e->keysym.mod & KMOD_SHIFT) camera.lookRight();
-		else camera.moveRight();
-		break;
-	case SDLK_w:
-		if (e->keysym.mod & KMOD_SHIFT) camera.lookUp();
-		else camera.moveForward();
-		break;
-	case SDLK_s:
-		if (e->keysym.mod & KMOD_SHIFT) camera.lookDown();
-		else camera.moveBackward();
-		break;
-	case SDLK_e:
-		if (e->keysym.mod & KMOD_SHIFT) camera.lookUp();
-		else camera.moveUp();
-		break;
-	case SDLK_q:
-		if (e->keysym.mod & KMOD_SHIFT) camera.lookDown();
-		else camera.moveDown();
-		break;
-	case SDLK_LSHIFT: break;
-	case SDLK_F1: break;
-	case SDLK_ESCAPE:
-		listenMouse = !listenMouse;
-		break;
 
-	case SDLK_i:
-		lightPosition += vec3(0.0f, 0.2f, 0.0f);
-		light->setPosition(vec3(-5, -5, -5) + lightPosition * 0.1f);
-		break;
-	case SDLK_k:
-		lightPosition += vec3(0.0f, -0.2f, 0.0f);
-		light->setPosition(vec3(-5, -5, -5) + lightPosition * 0.1f);
-		break;
-	case SDLK_l:
-		lightPosition += vec3(0.2f, 0.0f, 0.0f);
-		light->setPosition(vec3(-5, -5, -5) + lightPosition * 0.1f);
-		break;
-	case SDLK_j:
-		lightPosition += vec3(-0.2f, 0.0f, 0.0f);
-		light->setPosition(vec3(-5, -5, -5) + lightPosition * 0.1f);
-		break;
-	case SDLK_u:
-		lightPosition += vec3(0.0f, 0.0f, -0.2f);
-		light->setPosition(vec3(-5, -5, -5) + lightPosition * 0.1f);
-		break;
-	case SDLK_o:
-		lightPosition += vec3(0.0f, 0.0f, 0.2f);
-		light->setPosition(vec3(-5, -5, -5) + lightPosition * 0.1f);
-		break;
-	}
-}
 
 void Game::startMainLoop(){
 	initialize();
@@ -188,6 +124,10 @@ void Game::startMainLoop(){
 
 void Game::addGameObject(GameObject* gameObject){
 	gameObjects->push_back(gameObject);
+}
+
+void Game::removeGameObject(){
+	gameObjects->pop_back();
 }
 
 Game::Game(){
